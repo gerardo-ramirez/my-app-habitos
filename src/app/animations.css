@@ -1,0 +1,72 @@
+/* Animación de pulso rojo para el borde */
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+.pulse-red {
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes border-pulse {
+  0% {
+    border-color: rgba(220, 38, 38, 0.6);
+    box-shadow: 0 0 5px rgba(220, 38, 38, 0.3);
+  }
+  50% {
+    border-color: rgba(220, 38, 38, 1);
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
+  }
+  100% {
+    border-color: rgba(220, 38, 38, 0.6);
+    box-shadow: 0 0 5px rgba(220, 38, 38, 0.3);
+  }
+}
+
+.border-pulse {
+  animation: border-pulse 2s infinite;
+}
+
+/* Animación de hover para el estado TODO */
+@keyframes emerald-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0);
+  }
+}
+
+.hover-emerald-glow:hover {
+  animation: emerald-glow 2s infinite;
+}
+
+/* Efecto de glassmorphism */
+.glassmorphism {
+  background: rgba(24, 24, 27, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glassmorphism-dark {
+  background: rgba(24, 24, 27, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Animación de transición para los estados */
+.state-transition {
+  transition: all 0.3s ease-in-out;
+}

@@ -1,24 +1,26 @@
-// src/app/layout.tsx
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
-import QueryProvider from '@/providers/QueryProvider';
+import { Providers } from '@/providers';
 
-export const metadata = {
-  title: 'Meli-Style Boilerplate',
-  description: 'Arquitectura limpia con Next.js 15',
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'App de Hábitos',
+  description: 'Una aplicación para hacer seguimiento de tus hábitos diarios',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="es">
-      <body>
-        <QueryProvider>
-          <header className="bg-white border-b p-4">
-            <nav className="container mx-auto">
-              <span className="font-bold text-blue-600">APP BOILERPLATE</span>
-            </nav>
-          </header>
+      <body className={inter.className}>
+        <Providers>
           {children}
-        </QueryProvider>
+        </Providers>
       </body>
     </html>
   );
