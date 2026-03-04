@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getServerSession } from '@/lib/supabase/server';
+import { getServerSession } from '@/utils/supabase/server';
 import { AuthForm, SupabaseDiagnostic } from '@/features/auth/components';
 
 export default async function AuthPage() {

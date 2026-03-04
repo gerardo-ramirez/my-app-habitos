@@ -1,7 +1,7 @@
 'use server';
 
-import { signInWithEmailPassword, signUpWithEmailPassword, signOut } from '@/lib/supabase/action';
-import { handleSupabaseError } from '@/lib/supabase';
+import { signInWithEmailPassword, signUpWithEmailPassword, signOut } from '@/utils/supabase/server';
+import { handleSupabaseError } from '@/utils/supabase';
 import { LoginCredentials, RegisterCredentials } from '../types';
 
 /**

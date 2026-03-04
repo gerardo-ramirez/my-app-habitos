@@ -1,7 +1,7 @@
 'use client';
 
 import { toast } from '@/components/ui/use-toast';
-import { handleSupabaseError } from '@/lib/supabase';
+import { handleSupabaseError } from '@/utils/supabase';
 
 /**
  * Hook para manejar errores de forma consistente en la aplicación

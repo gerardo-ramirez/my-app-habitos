@@ -3,11 +3,8 @@
 // Re-exportamos las funciones desde los nuevos archivos
 export { 
   getServerSession, 
-  getServerUser 
-} from '@/lib/supabase/server';
-
-export { 
+  getServerUser,
   signInWithEmailPassword, 
   signUpWithEmailPassword, 
   signOut 
-} from '@/lib/supabase/action';
+} from '@/utils/supabase/server';

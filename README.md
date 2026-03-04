@@ -33,12 +33,13 @@ my-app-habitos/
 │   │       └── types/       # Tipos TypeScript para hábitos
 │   ├── hooks/            # Hooks personalizados globales
 │   ├── lib/              # Utilidades y configuraciones
+│   │   └── database.types.ts # Tipos TypeScript para la base de datos
+│   ├── utils/            # Utilidades generales
 │   │   ├── supabase/     # Configuración de Supabase
-│   │   │   ├── action.ts    # Cliente de Supabase para Server Actions
-│   │   │   ├── server.ts    # Cliente de Supabase para Server Components
-│   │   │   └── cookie-config.ts # Configuración de cookies
-│   │   ├── database.types.ts # Tipos TypeScript para la base de datos
-│   │   └── utils.ts      # Utilidades generales
+│   │   │   ├── client.ts     # Cliente de Supabase para el navegador
+│   │   │   ├── server.ts     # Cliente de Supabase para Server Components y Server Actions
+│   │   │   ├── cookie-config.ts # Configuración de cookies
+│   │   │   └── index.ts      # Re-exportaciones para facilitar importaciones
 │   ├── providers/        # Proveedores de contexto React
 │   └── middleware.ts     # Middleware de Next.js para manejo de rutas
 ├── .cursorrules          # Reglas para el editor Cursor
@@ -87,14 +88,14 @@ my-app-habitos/
 Error: Cookies can only be modified in a Server Action or Route Handler
 ```
 
-Este error ocurría porque en Next.js 16, la API de cookies solo puede modificar cookies en Server Actions o Route Handlers, no en Server Components regulares.
+Este error ocurría porque en Next.js 16, la API de cookies solo puede modificar cookies en Server Actions o Route Handlers, no en Server Components regulares. Además, la función `cookies()` ahora devuelve una promesa y debe ser usada con `await`.
 
 **Solución:**
-- Separamos la lógica de Supabase en dos archivos:
-  - `server.ts`: Cliente para Server Components (solo lectura)
-  - `action.ts`: Cliente para Server Actions (lectura y escritura)
-- Implementamos correctamente el método `get()` para cookies en Server Components
-- Implementamos los métodos `get()`, `set()` y `remove()` para cookies en Server Actions
+- Consolidamos la lógica de Supabase en una estructura más limpia:
+  - `utils/supabase/client.ts`: Cliente para el navegador
+  - `utils/supabase/server.ts`: Cliente unificado para Server Components y Server Actions
+- Implementamos la función `createClient()` como asíncrona para manejar `cookies()` como una promesa
+- Añadimos bloques try/catch para ignorar errores cuando se intenta modificar cookies en un Server Component
 - Configuramos las cookies de autenticación con `httpOnly: true` para mayor seguridad
 
 ### 2. Error de Importación de Módulos
@@ -149,6 +150,31 @@ La aplicación sigue un diseño premium con modo oscuro:
   - Completado: Verde celeste (Cyan-400)
   - Pendiente: Indigo-500
   - Urgente: Rojo con animación de pulso
+
+### 5. Sincronización de Tipos y Base de Datos
+
+**Problema:**
+La aplicación estaba utilizando `last_completed_at` en las actualizaciones de hábitos, pero la estructura de la base de datos requiere usar estrictamente `status: 'completed'` o `status: 'pending'`.
+
+**Solución:**
+- Eliminamos todas las referencias a `last_completed_at` en el servicio de hábitos
+- Simplificamos el objeto de actualización para usar solo `{ status: 'completed' }` o `{ status: 'pending' }`
+
+### 6. Error de Importación de Componentes del Servidor en Componentes del Cliente
+
+**Problema:**
+```
+You're importing a component that needs "next/headers". That only works in a Server Component.
+```
+
+Este error ocurría porque estábamos exportando funciones del servidor (que utilizan `next/headers`) desde el archivo `index.ts` en `utils/supabase`, y luego importando ese archivo en componentes del cliente. En Next.js 16, las APIs del servidor como `cookies()` de `next/headers` solo pueden ser utilizadas en componentes del servidor.
+
+**Solución:**
+- Agregamos la directiva `'use server'` al inicio del archivo `server.ts` para marcar explícitamente que es un componente del servidor
+- Modificamos el archivo `index.ts` en `utils/supabase` para que solo exporte funciones del cliente, eliminando las exportaciones de funciones del servidor
+- Actualizamos todas las importaciones en componentes del cliente para que solo importen desde `@/utils/supabase` (cliente)
+- Actualizamos todas las importaciones en componentes del servidor para que importen directamente desde `@/utils/supabase/server`
+- Esta separación clara entre cliente y servidor evita que los componentes del cliente intenten importar código que usa APIs exclusivas del servidor
 
 ## Desarrollo Futuro
 

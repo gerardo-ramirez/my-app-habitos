@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/utils/supabase';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 

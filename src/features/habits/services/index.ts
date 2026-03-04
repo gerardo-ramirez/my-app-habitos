@@ -1,4 +1,4 @@
-import { supabase, getCurrentUserId, handleSupabaseError } from '@/lib/supabase';
+import { supabase, getCurrentUserId, handleSupabaseError } from '@/utils/supabase';
 import { adaptHabit, adaptHabits } from '../adapters';
 import { Habit, HabitCreate, HabitFilters, HabitUpdate } from '../types';
 import { toast } from '@/components/ui/use-toast';
@@ -178,7 +178,7 @@ export const toggleHabitCompletion = async (habit: Habit): Promise<Habit | null>
     const newStatus = habit.status === 'completed' ? 'pending' : 'completed';
     const updates: HabitUpdate = {
       status: newStatus,
-      last_completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
+      // Eliminamos la referencia a last_completed_at según las directrices
     };
 
     return await updateHabit(habit.id, updates);

@@ -1,4 +1,4 @@
-import { supabase, handleSupabaseError } from '@/lib/supabase';
+import { supabase, handleSupabaseError } from '@/utils/supabase';
 import { LoginCredentials, RegisterCredentials, AuthError } from '../types';
 import { serverLoginUser, serverRegisterUser, serverLogoutUser } from './server-actions';
 

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getHabits } from '@/features/habits/services';
 import { HabitList, HabitForm } from '@/features/habits/components';
-import { getServerSession } from '@/lib/supabase/server';
+import { getServerSession } from '@/utils/supabase/server';
 import { HabitsPageClient } from './HabitsPageClient';
 
 export default async function HabitsPage() {

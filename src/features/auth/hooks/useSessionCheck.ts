@@ -2,7 +2,11 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+// #region agent log
+fetch('http://127.0.0.1:7900/ingest/4963268f-5e74-4624-a220-1aba5c961d9e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'39a4d6'},body:JSON.stringify({sessionId:'39a4d6',location:'useSessionCheck.ts:5',message:'Client component importing from utils/supabase',data:{},timestamp:Date.now(),hypothesisId:'A,C',runId:'initial'})}).catch(()=>{});
+// #endregion
+
+import { supabase } from '@/utils/supabase';
 import { useSession, useUser } from '.';
 
 /**

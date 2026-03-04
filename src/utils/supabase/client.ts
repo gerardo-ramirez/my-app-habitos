@@ -1,6 +1,15 @@
-import { createClient } from './supabase-browser';
+import { createBrowserClient } from '@supabase/ssr';
+import { type Database } from '@/lib/database.types';
 
-// Exportamos el cliente de Supabase para el navegador
+// Creamos una instancia del cliente de Supabase para el navegador
+export const createClient = () => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+};
+
+// Cliente de Supabase para el navegador (singleton)
 export const supabase = createClient();
 
 // Helper para obtener el usuario actual
