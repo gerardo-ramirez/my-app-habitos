@@ -187,3 +187,110 @@ export const toggleHabitCompletion = async (habit: Habit): Promise<Habit | null>
     return null;
   }
 };
+
+/**
+ * Marca un hábito como cancelado
+ */
+export const cancelHabit = async (habit: Habit): Promise<Habit | null> => {
+  try {
+    const updates: HabitUpdate = {
+      status: 'cancelled',
+    };
+
+    return await updateHabit(habit.id, updates);
+  } catch (error) {
+    // El error ya se maneja en updateHabit
+    return null;
+  }
+};
+
+/**
+ * Marca todos los hábitos pendientes como incompletos
+ * Esta función debe ejecutarse al final del día (medianoche)
+ */
+export const markPendingHabitsAsIncomplete = async (): Promise<boolean> => {
+  try {
+    // Obtener el ID del usuario actual
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      throw new Error('No se ha encontrado un usuario autenticado');
+    }
+
+    // Actualizar todos los hábitos pendientes a incompletos
+    const { error } = await supabase
+      .from('habits')
+      .update({ status: 'incomplete' })
+      .eq('user_id', userId)
+      .eq('status', 'pending');
+
+    if (error) {
+      throw error;
+    }
+
+    return true;
+  } catch (error) {
+    const supabaseError = handleSupabaseError(error);
+    toast({
+      title: 'Error al actualizar hábitos pendientes',
+      description: supabaseError.message,
+      variant: 'destructive',
+    });
+    return false;
+  }
+};
+
+/**
+ * Obtiene títulos únicos de hábitos para sugerencias en el combobox
+ */
+export const getDistinctHabitTitles = async (): Promise<string[]> => {
+  try {
+    // Obtener el ID del usuario actual
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      throw new Error('No se ha encontrado un usuario autenticado');
+    }
+
+    // Consulta para obtener títulos distintos
+    const { data, error } = await supabase
+      .from('habits')
+      .select('title')
+      .eq('user_id', userId)
+      .limit(100);
+
+    if (error) {
+      throw error;
+    }
+
+    // Extraer títulos únicos
+    const titles = [...new Set(data.map(item => item.title))];
+    return titles;
+  } catch (error) {
+    const supabaseError = handleSupabaseError(error);
+    toast({
+      title: 'Error al obtener títulos de hábitos',
+      description: supabaseError.message,
+      variant: 'destructive',
+    });
+    return [];
+  }
+};
+
+/**
+ * Convierte un texto a PascalCase
+ */
+export const toPascalCase = (text: string): string => {
+  // Eliminar espacios al inicio y al final
+  const trimmed = text.trim();
+  
+  // Si está vacío, devolver cadena vacía
+  if (!trimmed) return '';
+  
+  // Convertir a PascalCase
+  return trimmed
+    // Dividir por espacios, guiones, guiones bajos
+    .split(/[\s-_]+/)
+    // Capitalizar cada palabra
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    // Unir todo sin espacios
+    .join('');
+};

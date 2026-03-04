@@ -6,7 +6,9 @@ export enum HabitState {
   TODO = 'todo',
   COMPLETED = 'completed',
   WARNING = 'warning',
-  RED_ALERT = 'red_alert'
+  RED_ALERT = 'red_alert',
+  CANCELLED = 'cancelled',
+  INCOMPLETE = 'incomplete'
 }
 
 export interface TimeRemaining {
@@ -21,17 +23,25 @@ export interface TimeRemaining {
  * Determina el estado visual de un hábito basado en su estado de completitud y tiempo restante
  */
 export const getHabitState = (habit: Habit): HabitState => {
+  // Manejar los estados explícitos primero
   if (habit.status === 'completed') {
-    // Si está completado, verificamos si hay alguna condición de advertencia
-    // Por ahora, simplemente retornamos COMPLETED, pero podríamos agregar lógica para WARNING
     return HabitState.COMPLETED;
   }
   
-  // Si no está completado, verificamos si estamos en alerta roja
-  if (isRedAlertTime()) {
+  if (habit.status === 'cancelled') {
+    return HabitState.CANCELLED;
+  }
+  
+  if (habit.status === 'incomplete') {
+    return HabitState.INCOMPLETE;
+  }
+  
+  // Si está pendiente, verificamos si estamos en alerta roja
+  if (habit.status === 'pending' && isRedAlertTime()) {
     return HabitState.RED_ALERT;
   }
   
+  // Por defecto, si está pendiente y no es alerta roja
   return HabitState.TODO;
 };
 

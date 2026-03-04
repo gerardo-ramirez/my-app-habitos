@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCreateHabit } from '../hooks';
 import { HabitCreate } from '../types';
 import { habitCreateSchema, HabitCreateInput } from '../schemas';
 import { toast } from '@/components/ui/use-toast';
+import { Combobox } from '@/components/ui/combobox';
+import { getDistinctHabitTitles, toPascalCase } from '../services';
 
 interface HabitFormProps {
   onSuccess?: () => void;
@@ -15,7 +17,30 @@ export const HabitForm = ({ onSuccess }: HabitFormProps) => {
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [titleOptions, setTitleOptions] = useState<{ value: string; label: string }[]>([]);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
   const createHabit = useCreateHabit();
+  
+  // Cargar las opciones de títulos al montar el componente
+  useEffect(() => {
+    const loadTitleOptions = async () => {
+      setIsLoadingOptions(true);
+      try {
+        const titles = await getDistinctHabitTitles();
+        const options = titles.map(title => ({
+          value: title,
+          label: title
+        }));
+        setTitleOptions(options);
+      } catch (error) {
+        console.error('Error al cargar títulos:', error);
+      } finally {
+        setIsLoadingOptions(false);
+      }
+    };
+    
+    loadTitleOptions();
+  }, []);
 
   const validateForm = (): boolean => {
     try {
@@ -62,7 +87,7 @@ export const HabitForm = ({ onSuccess }: HabitFormProps) => {
     setIsSubmitting(true);
     
     const newHabit: HabitCreateInput = {
-      title: title.trim(),
+      title: toPascalCase(title.trim()), // Convertir a PascalCase antes de guardar
       description: description.trim() || null,
     };
     
@@ -102,23 +127,51 @@ export const HabitForm = ({ onSuccess }: HabitFormProps) => {
         <label htmlFor="title" className="block text-sm font-medium text-zinc-300 mb-1">
           Título
         </label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            // Limpiar el error cuando el usuario empieza a escribir
-            if (errors.title) {
-              setErrors(prev => ({ ...prev, title: '' }));
-            }
-          }}
-          className={`w-full px-3 py-2 border bg-zinc-800/70 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-            errors.title ? 'border-red-500' : 'border-zinc-700'
-          }`}
-          placeholder="Ej: Beber 2L de agua"
-          required
-        />
+        {titleOptions.length > 0 ? (
+          // Mostrar Combobox si hay opciones disponibles
+          <>
+            <Combobox
+              options={titleOptions}
+              value={title}
+              onValueChange={(value) => {
+                setTitle(value);
+                // Limpiar el error cuando el usuario selecciona una opción
+                if (errors.title) {
+                  setErrors(prev => ({ ...prev, title: '' }));
+                }
+              }}
+              placeholder="Selecciona o escribe un título..."
+              emptyMessage="No se encontraron coincidencias."
+              className={`w-full border ${
+                errors.title ? 'border-red-500' : 'border-zinc-700'
+              }`}
+              disabled={isSubmitting}
+            />
+            <p className="mt-1 text-xs text-zinc-500">
+              Se guardará en formato PascalCase (ej: "BailarSalsa")
+            </p>
+          </>
+        ) : (
+          // Mostrar input normal si no hay opciones
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              // Limpiar el error cuando el usuario empieza a escribir
+              if (errors.title) {
+                setErrors(prev => ({ ...prev, title: '' }));
+              }
+            }}
+            className={`w-full px-3 py-2 border bg-zinc-800/70 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+              errors.title ? 'border-red-500' : 'border-zinc-700'
+            }`}
+            placeholder="Ej: Beber 2L de agua"
+            required
+            disabled={isSubmitting}
+          />
+        )}
         {errors.title && (
           <p className="mt-1 text-sm text-red-400">{errors.title}</p>
         )}

@@ -4,7 +4,7 @@ export interface Habit {
   description: string | null;
   created_at: string;
   user_id: string;
-  status: 'pending' | 'completed';
+  status: 'pending' | 'completed' | 'cancelled' | 'incomplete';
 }
 
 export interface HabitCreate {
@@ -16,11 +16,11 @@ export interface HabitCreate {
 export interface HabitUpdate {
   title?: string;
   description?: string | null;
-  status?: 'pending' | 'completed';
+  status?: 'pending' | 'completed' | 'cancelled' | 'incomplete';
   last_completed_at?: string | null;
 }
 
 export interface HabitFilters {
   userId?: string;
-  status?: 'pending' | 'completed';
+  status?: 'pending' | 'completed' | 'cancelled' | 'incomplete';
 }
