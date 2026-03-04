@@ -42,19 +42,19 @@ export const HabitCard = ({ habit }: HabitCardProps) => {
 
   // Clases para la tarjeta según el estado
   const cardClasses = cn(
-    "p-4 rounded-lg shadow-md mb-4 transition-all duration-300 state-transition glassmorphism",
+    "p-4 rounded-lg shadow-md mb-4 transition-all duration-300 state-transition backdrop-blur-sm",
     {
       // Estado completado: verde celeste
       "bg-zinc-900/50 border border-cyan-400/30 text-opacity-60": habitState === HabitState.COMPLETED,
       
       // Estado alerta roja: borde rojo pulsante
-      "bg-zinc-900/50 border-2 border-red-600 border-pulse": habitState === HabitState.RED_ALERT,
+      "bg-zinc-900/50 border-2 border-red-600 animate-pulse": habitState === HabitState.RED_ALERT,
       
       // Estado advertencia: amarillo
-      "bg-zinc-900/50 border border-yellow-400/30": habitState === HabitState.WARNING,
+      "bg-zinc-900/50 border border-yellow-500/30": habitState === HabitState.WARNING,
       
-      // Estado por hacer: borde verde esmeralda
-      "bg-zinc-900/50 border border-emerald-500/30 hover-emerald-glow": habitState === HabitState.TODO,
+      // Estado por hacer: borde indigo
+      "bg-zinc-900/50 border border-indigo-500/30 hover:border-indigo-400/50 hover:shadow-indigo-500/20 hover:shadow-lg": habitState === HabitState.TODO,
     }
   );
 
@@ -65,7 +65,7 @@ export const HabitCard = ({ habit }: HabitCardProps) => {
       "bg-cyan-400 border-cyan-400 text-zinc-900": habitState === HabitState.COMPLETED,
       "border-red-600 pulse-red": habitState === HabitState.RED_ALERT,
       "border-yellow-400": habitState === HabitState.WARNING,
-      "border-emerald-500": habitState === HabitState.TODO,
+      "border-indigo-500": habitState === HabitState.TODO,
     }
   );
 
@@ -92,10 +92,10 @@ export const HabitCard = ({ habit }: HabitCardProps) => {
           onKeyDown={handleKeyDown}
           tabIndex={0}
           role="checkbox"
-          aria-checked={habit.is_completed}
-          aria-label={`Marcar ${habit.title} como ${habit.is_completed ? 'incompleto' : 'completo'}`}
+          aria-checked={habit.status === 'completed'}
+          aria-label={`Marcar ${habit.title} como ${habit.status === 'completed' ? 'pendiente' : 'completado'}`}
         >
-          {habit.is_completed && <CheckCircle className="w-4 h-4" />}
+          {habit.status === 'completed' && <CheckCircle className="w-4 h-4" />}
         </div>
         <div className="ml-3 flex-grow">
           <h3 className={titleClasses}>
@@ -138,7 +138,7 @@ export const HabitCard = ({ habit }: HabitCardProps) => {
       {isExpanded && (
         <div className="mt-3 pl-9 text-zinc-300 text-sm">
           {habit.description || "Sin descripción"}
-          {timeRemaining.isRedAlert && !habit.is_completed && (
+          {timeRemaining.isRedAlert && habit.status === 'pending' && (
             <div className="mt-2 flex items-center text-red-500 text-xs">
               <Clock className="w-4 h-4 mr-1" />
               <span>Tiempo restante: {formatTimeRemaining()}</span>

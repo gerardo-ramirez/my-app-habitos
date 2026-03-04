@@ -1,97 +1,161 @@
-### scaffolding
-```
-src/
-├── api/              # Axios instance / Interceptors
-├── components/       # UI Atómica (Shadcn/CVA) y Layouts
-├── features/         # EL NÚCLEO (Dominio de negocio)
-│   └── users/        
-│       ├── adapters/ # Limpia data de API -> UI
-│       ├── components/
-│       ├── hooks/    # React Query (useQuery)
-│       ├── services/ # Llamados fetch/axios
-│       ├── types/    # Interfaces TS
-│       └── index.ts  # Barrel Pattern
-├── app/              # RUTAS (Sustituye a React Router)
-│   ├── users/
-│   │   └── page.tsx  # Solo llama al componente de la Feature
-│   └── layout.tsx    # Providers (QueryClient) y Navbar
-└── providers/        # React Query Client Provider
+# App de Hábitos - Documentación
+
+Una aplicación moderna para el seguimiento de hábitos diarios, construida con Next.js 16, Supabase y TailwindCSS.
+
+## Estructura del Proyecto
 
 ```
-Carpeta / Archivo,Tipo,Razón de Senior
-api/,Shared,"Axios funciona en ambos, pero los interceptores de localStorage solo en Client."
-components/ui/,RCC,Shadcn/Radix suelen usar estados para accesibilidad/animaciones.
-features/users/services/,Shared,Funciones puras de Fetch/Axios. Se pueden llamar desde el servidor o cliente.
-features/users/hooks/,RCC,useQuery depende del ciclo de vida de React (Context).
-app/users/page.tsx,RSC,"Por defecto, todas las rutas en app/ son Server Components."
+my-app-habitos/
+├── .next/                # Archivos generados por Next.js (compilación)
+├── node_modules/         # Dependencias de Node.js
+├── public/               # Archivos estáticos accesibles públicamente
+├── src/                  # Código fuente de la aplicación
+│   ├── api/              # Configuración de API y utilidades
+│   ├── app/              # Componentes y páginas de la aplicación (App Router de Next.js)
+│   │   ├── auth/         # Página de autenticación
+│   │   ├── habits/       # Página de hábitos
+│   │   ├── actions.ts    # Server Actions para operaciones del servidor
+│   │   ├── globals.css   # Estilos globales
+│   │   └── layout.tsx    # Layout principal de la aplicación
+│   ├── components/       # Componentes reutilizables de UI
+│   │   └── ui/           # Componentes de UI básicos (botones, inputs, etc.)
+│   ├── features/         # Módulos de funcionalidades organizados por dominio
+│   │   ├── auth/         # Funcionalidad de autenticación
+│   │   │   ├── components/  # Componentes relacionados con autenticación
+│   │   │   ├── hooks/       # Hooks personalizados para autenticación
+│   │   │   ├── services/    # Servicios para interactuar con la API de autenticación
+│   │   │   └── types/       # Tipos TypeScript para autenticación
+│   │   └── habits/       # Funcionalidad de hábitos
+│   │       ├── adapters/    # Adaptadores para transformar datos
+│   │       ├── components/  # Componentes relacionados con hábitos
+│   │       ├── hooks/       # Hooks personalizados para hábitos
+│   │       ├── services/    # Servicios para interactuar con la API de hábitos
+│   │       └── types/       # Tipos TypeScript para hábitos
+│   ├── hooks/            # Hooks personalizados globales
+│   ├── lib/              # Utilidades y configuraciones
+│   │   ├── supabase/     # Configuración de Supabase
+│   │   │   ├── action.ts    # Cliente de Supabase para Server Actions
+│   │   │   ├── server.ts    # Cliente de Supabase para Server Components
+│   │   │   └── cookie-config.ts # Configuración de cookies
+│   │   ├── database.types.ts # Tipos TypeScript para la base de datos
+│   │   └── utils.ts      # Utilidades generales
+│   ├── providers/        # Proveedores de contexto React
+│   └── middleware.ts     # Middleware de Next.js para manejo de rutas
+├── .cursorrules          # Reglas para el editor Cursor
+├── .env.local            # Variables de entorno locales
+├── .gitignore            # Archivos y carpetas ignorados por Git
+├── eslint.config.mjs     # Configuración de ESLint
+├── next-env.d.ts         # Tipos para Next.js
+├── next.config.ts        # Configuración de Next.js
+├── package-lock.json     # Versiones exactas de dependencias
+├── package.json          # Dependencias y scripts
+├── postcss.config.mjs    # Configuración de PostCSS
+└── tsconfig.json         # Configuración de TypeScript
+```
 
-🚀 Next.js Professional Boilerplate (Senior Architecture)
-Este proyecto es una base sólida diseñada para superar desafíos técnicos de nivel Junior a Senior. Sigue una arquitectura de Clean Architecture y Feature-Driven Design, optimizada para el App Router de Next.js 15 y Tailwind CSS 4.
+## Funcionalidad
 
-🏗️ Arquitectura del Proyecto (The Beauty)
-La estructura está diseñada para ser escalable, testeable y desacoplada. Se divide en tres capas principales:
+### Autenticación
+- Registro de usuarios con email y contraseña
+- Inicio de sesión con email y contraseña
+- Confirmación de email
+- Cierre de sesión
+- Protección de rutas para usuarios autenticados
 
-1. Capa de Infraestructura (src/api, src/providers)
-API: Centraliza la configuración de Axios. Aquí residen los interceptores para manejar tokens de autenticación y errores globales (Aggressive Error Feedback).
+### Gestión de Hábitos
+- Creación de nuevos hábitos
+- Listado de hábitos del usuario
+- Marcado de hábitos como completados
+- Visualización del estado de los hábitos (pendiente, completado)
+- Indicador visual de urgencia para hábitos próximos a vencer
 
-Providers: Envuelve la aplicación con los contextos necesarios (React Query) sin ensuciar los componentes de servidor.
+### Características Técnicas
+- Server Components y Server Actions de Next.js 16
+- Manejo seguro de cookies con httpOnly para tokens de autenticación
+- Diseño responsive con TailwindCSS
+- Efectos visuales premium con glassmorphism y gradientes
+- Manejo de estado con React Query
+- Validación de formularios con Zod
+- Feedback visual con sistema de toasts
 
-2. Capa de Dominio / Features (src/features/)
-Es el corazón del proyecto. Cada dominio (ej. users, products) está encapsulado:
+## Conflictos y Soluciones
 
-Services: Única fuente de verdad para las llamadas a la API.
+### 1. Error de Cookies en Next.js 16
 
-Adapters: Transforman los datos crudos de la API (DTO) a interfaces limpias para la UI (UserUI). Esto protege a la aplicación de cambios inesperados en el backend.
+**Problema:**
+```
+Error: Cookies can only be modified in a Server Action or Route Handler
+```
 
-Hooks: Lógica de estado y caché mediante React Query.
+Este error ocurría porque en Next.js 16, la API de cookies solo puede modificar cookies en Server Actions o Route Handlers, no en Server Components regulares.
 
-Components: UI exclusiva de la funcionalidad.
+**Solución:**
+- Separamos la lógica de Supabase en dos archivos:
+  - `server.ts`: Cliente para Server Components (solo lectura)
+  - `action.ts`: Cliente para Server Actions (lectura y escritura)
+- Implementamos correctamente el método `get()` para cookies en Server Components
+- Implementamos los métodos `get()`, `set()` y `remove()` para cookies en Server Actions
+- Configuramos las cookies de autenticación con `httpOnly: true` para mayor seguridad
 
-Index (Barrel): Punto de entrada único que expone solo lo necesario al resto de la app.
+### 2. Error de Importación de Módulos
 
-3. Capa de Aplicación / Rutas (src/app/)
-Usa el sistema de carpetas de Next.js para el enrutamiento.
+**Problema:**
+```
+The export getServerSession was not found in module [project]/Practicas/app-actividades/my-app-habitos/src/app/actions.ts
+```
 
-RSC (React Server Components): Las páginas son servidores por defecto para maximizar el SEO y minimizar el JS en el cliente.
+Este error ocurría porque después de refactorizar el código, algunas importaciones no se actualizaron correctamente.
 
-RCC (React Client Components): Solo los componentes de las features que requieren interactividad llevan la directiva 'use client'.
+**Solución:**
+- Actualizamos todas las importaciones para que apunten a las ubicaciones correctas
+- Aseguramos la consistencia en las rutas de importación en todo el proyecto
+- Utilizamos alias de importación `@/` para mantener las rutas limpias
 
-⚡ Estrategia de Latencia (Netflix Style)
-Para aplicaciones de alto tráfico como Netflix o Mercado Libre, la latencia es el enemigo #1. Este boilerplate la combate de tres formas:
+### 3. Advertencia de Middleware
 
-Server-Side Pre-rendering: Al usar Next.js, el esqueleto de la página se sirve desde el servidor, bajando el LCP (Largest Contentful Paint).
+**Problema:**
+```
+The "middleware" file convention is deprecated. Please use "proxy" instead.
+```
 
-Stale-While-Revalidate (React Query): Los datos se sirven desde el caché instantáneamente mientras se actualizan en segundo plano. Cero spinners para el usuario que regresa.
+Esta advertencia indica que el archivo `middleware.ts` está obsoleto en Next.js 16 y debería ser reemplazado por `proxy.ts`.
 
-Data Adapters: Al transformar la data en la capa de servicio/hook, el hilo principal del navegador no se bloquea procesando JSONs pesados durante el renderizado.
+**Solución pendiente:**
+- En una futura actualización, migrar de `middleware.ts` a `proxy.ts` siguiendo la nueva convención de Next.js 16
 
-Nota sobre Netflix: Netflix utiliza una estrategia de "Skeleton Screens" y carga perezosa de filas para que el usuario sienta que la app es instantánea, incluso si la API de recomendaciones tarda 2 segundos en responder. Este proyecto permite replicar eso mediante Suspense y componentes atómicos.
+### 4. Advertencia de Turbopack
 
-🛠️ Stack Tecnológico
-Next.js 15 (App Router): Orquestación y rutas.
+**Problema:**
+```
+Warning: Next.js inferred your workspace root, but it may not be correct.
+```
 
-Tailwind CSS 4: Estilos modernos basados en variables de CSS (Zero-config).
+Esta advertencia ocurre porque Turbopack detecta múltiples archivos package-lock.json y no puede determinar correctamente la raíz del proyecto.
 
-CVA (Class Variance Authority): Gestión de variantes de UI escalables.
+**Solución pendiente:**
+- Configurar `turbopack.root` en next.config.ts para especificar la raíz del proyecto
 
-React Query: Gestión de estado asíncrono y caché.
+## Estilo Visual
 
-Axios: Cliente HTTP con interceptores.
+La aplicación sigue un diseño premium con modo oscuro:
 
-📝 Senior Mantra (Recordatorio para el Challenge)
-Antes de empezar cualquier feature nueva:
+- **Fondo base:** `bg-zinc-950` con gradiente radial `from-indigo-900/10 via-zinc-950 to-zinc-950`
+- **Efecto Glassmorphism:** Fondos semitransparentes con desenfoque para tarjetas y componentes
+- **Jerarquía de texto:**
+  - Títulos: `text-zinc-50` (máximo contraste)
+  - Subtítulos/Cuerpo: `text-zinc-400` (contraste suave)
+- **Botones primarios:** `bg-indigo-500` con `text-zinc-950` y estados hover/focus
+- **Estados visuales de hábitos:**
+  - Completado: Verde celeste (Cyan-400)
+  - Pendiente: Indigo-500
+  - Urgente: Rojo con animación de pulso
 
-¿Volumen de tráfico? Optimizar para renderizado inicial (SEO).
+## Desarrollo Futuro
 
-¿Estrategia de Error? Feedback agresivo al usuario, no fallos silenciosos.
-
-¿Design System? Seguir los principios de accesibilidad y usar componentes base con CVA.
-
-¿Cómo usar este Boilerplate para MeLi?
-Duplica la carpeta features/users y cámbiala a features/products.
-
-Define tus ProductDTO y ProductUI en types.
-
-Ajusta el adapter para manejar los precios y monedas de MeLi.
-
-¡Llama a tu nueva feature en app/products/page.tsx!
+- Migración de `middleware.ts` a `proxy.ts`
+- Configuración de `turbopack.root` en next.config.ts
+- Implementación de temas claro/oscuro
+- Añadir estadísticas y visualización de progreso
+- Implementación de notificaciones push
+- Soporte para categorías de hábitos
+- Integración con calendario

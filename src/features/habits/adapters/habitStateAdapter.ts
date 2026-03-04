@@ -21,7 +21,7 @@ export interface TimeRemaining {
  * Determina el estado visual de un hábito basado en su estado de completitud y tiempo restante
  */
 export const getHabitState = (habit: Habit): HabitState => {
-  if (habit.is_completed) {
+  if (habit.status === 'completed') {
     // Si está completado, verificamos si hay alguna condición de advertencia
     // Por ahora, simplemente retornamos COMPLETED, pero podríamos agregar lógica para WARNING
     return HabitState.COMPLETED;

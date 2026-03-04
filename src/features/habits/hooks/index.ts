@@ -221,10 +221,10 @@ export const useToggleHabitCompletion = () => {
       const previousHabits = queryClient.getQueryData(habitKeys.list({}));
       
       // Crear el estado optimista
-      const isCompleted = !habit.is_completed;
+      const newStatus = habit.status === 'completed' ? 'pending' : 'completed';
       const optimisticUpdates = {
-        is_completed: isCompleted,
-        last_completed_at: isCompleted ? new Date().toISOString() : null,
+        status: newStatus,
+        last_completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
       };
       
       // Optimisticamente actualizar la UI para el detalle
@@ -258,7 +258,7 @@ export const useToggleHabitCompletion = () => {
     },
     onSuccess: (updatedHabit, habit) => {
       if (updatedHabit) {
-        const action = updatedHabit.is_completed ? 'completado' : 'marcado como pendiente';
+        const action = updatedHabit.status === 'completed' ? 'completado' : 'marcado como pendiente';
         
         // Notificar éxito
         toast({

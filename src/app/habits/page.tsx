@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getHabits } from '@/features/habits/services';
 import { HabitList, HabitForm } from '@/features/habits/components';
-import { getServerSession } from '../actions';
+import { getServerSession } from '@/lib/supabase/server';
 import { HabitsPageClient } from './HabitsPageClient';
 
 export default async function HabitsPage() {
@@ -21,7 +21,7 @@ export default async function HabitsPage() {
     const initialHabits = await getHabits({ userId });
 
     return (
-      <div className="max-w-3xl mx-auto py-8 px-4">
+      <div className="max-w-3xl mx-auto py-8 px-4 text-zinc-50">
         <HabitsPageClient 
           userId={userId} 
           initialHabits={initialHabits} 
@@ -33,7 +33,7 @@ export default async function HabitsPage() {
     
     // Incluso si hay un error, mostrar la página con el userId correcto
     return (
-      <div className="max-w-3xl mx-auto py-8 px-4">
+      <div className="max-w-3xl mx-auto py-8 px-4 text-zinc-50">
         <HabitsPageClient 
           userId={userId} 
           initialHabits={[]} 

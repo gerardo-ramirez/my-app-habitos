@@ -10,7 +10,7 @@ export const adaptHabit = (data: any): Habit => {
     description: data.description,
     created_at: data.created_at,
     user_id: data.user_id,
-    is_completed: data.is_completed,
+    status: data.status || (data.is_completed ? 'completed' : 'pending'),
     last_completed_at: data.last_completed_at,
   };
 };

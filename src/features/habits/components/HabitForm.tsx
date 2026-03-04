@@ -95,8 +95,8 @@ export const HabitForm = ({ onSuccess }: HabitFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-zinc-900/50 glassmorphism rounded-lg shadow-md p-6 mb-6 border border-emerald-500/30">
-      <h2 className="text-xl font-semibold mb-4 text-emerald-400">Crear nuevo hábito</h2>
+    <form onSubmit={handleSubmit} className="bg-zinc-900/50 glassmorphism rounded-lg shadow-md p-6 mb-6 border border-indigo-500/30">
+      <h2 className="text-xl font-semibold mb-4 text-indigo-400">Crear nuevo hábito</h2>
       
       <div className="mb-4">
         <label htmlFor="title" className="block text-sm font-medium text-zinc-300 mb-1">
@@ -113,7 +113,7 @@ export const HabitForm = ({ onSuccess }: HabitFormProps) => {
               setErrors(prev => ({ ...prev, title: '' }));
             }
           }}
-          className={`w-full px-3 py-2 border bg-zinc-800/70 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+          className={`w-full px-3 py-2 border bg-zinc-800/70 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
             errors.title ? 'border-red-500' : 'border-zinc-700'
           }`}
           placeholder="Ej: Beber 2L de agua"
@@ -138,7 +138,7 @@ export const HabitForm = ({ onSuccess }: HabitFormProps) => {
               setErrors(prev => ({ ...prev, description: '' }));
             }
           }}
-          className={`w-full px-3 py-2 border bg-zinc-800/70 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+          className={`w-full px-3 py-2 border bg-zinc-800/70 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
             errors.description ? 'border-red-500' : 'border-zinc-700'
           }`}
           placeholder="Describe tu hábito..."
@@ -155,7 +155,7 @@ export const HabitForm = ({ onSuccess }: HabitFormProps) => {
         className={`w-full py-2 px-4 rounded-md font-medium text-zinc-900 
           ${!title.trim() || isSubmitting 
             ? 'bg-zinc-600 cursor-not-allowed text-zinc-400' 
-            : 'bg-emerald-500 hover:bg-emerald-600 text-zinc-900'}`}
+            : 'bg-indigo-500 hover:bg-indigo-600 text-zinc-900'}`}
       >
         {isSubmitting ? 'Creando...' : 'Crear hábito'}
       </button>

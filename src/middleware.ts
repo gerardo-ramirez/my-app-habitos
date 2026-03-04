@@ -1,41 +1,51 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
-// Este middleware solo se ejecutará en las rutas que coincidan con el matcher
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next();
-  
-  // Crear un cliente de Supabase específico para el middleware
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (name) => request.cookies.get(name)?.value,
-        set: (name, value, options) => {
-          response.cookies.set({ name, value, ...options });
+        get(name) {
+          return request.cookies.get(name)?.value;
         },
-        remove: (name, options) => {
-          response.cookies.set({ name, value: '', ...options });
+        set(name, value, options) {
+          // Si ya estamos en el servidor, no podemos establecer cookies en la respuesta
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+        },
+        remove(name, options) {
+          // Si ya estamos en el servidor, no podemos eliminar cookies de la respuesta
+          response.cookies.delete(name);
         },
       },
     }
   );
-  
-  // Verificar si hay una sesión activa
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  // Si no hay sesión y la ruta está bajo /habits, redirigir a /auth
-  if (!session && request.nextUrl.pathname.startsWith('/habits')) {
-    const redirectUrl = new URL('/auth', request.url);
-    return NextResponse.redirect(redirectUrl);
-  }
-  
+
+  // Opcional: Verificar la sesión y redirigir según sea necesario
+  // const { data: { session } } = await supabase.auth.getSession();
+
   return response;
 }
 
-// Configurar el middleware para que solo se ejecute en las rutas bajo /habits
+// Opcional: Configurar las rutas que deben usar el middleware
 export const config = {
-  matcher: ['/habits/:path*'],
+  matcher: [
+    /*
+     * Coincide con todas las rutas de solicitud excepto:
+     * 1. Todas las rutas que comienzan con /api, _next, _vercel, _static, favicon.ico, robots.txt
+     * 2. Todas las rutas que terminan con archivos estáticos como imágenes, fuentes, iconos, etc.
+     */
+    '/((?!api|_next|_vercel|_static|favicon.ico|robots.txt|.*\\.(?:jpg|jpeg|gif|png|svg|webp|js|css|eot|otf|ttf|ttc|woff|woff2|font|manifest)).*)',
+  ],
 };

@@ -1,89 +1,29 @@
 import { supabase, handleSupabaseError } from '@/lib/supabase';
 import { LoginCredentials, RegisterCredentials, AuthError } from '../types';
+import { serverLoginUser, serverRegisterUser, serverLogoutUser } from './server-actions';
 
 /**
  * Servicio para registrar un nuevo usuario
+ * Usa la acción del servidor para manejar las cookies correctamente
  */
 export const registerUser = async ({ email, password }: RegisterCredentials) => {
-  try {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth`,
-        data: {
-          name: email.split('@')[0], // Nombre de usuario basado en el email
-        }
-      }
-    });
-
-    if (error) {
-      throw error;
-    }
-    
-    // Verificar si el usuario se creó correctamente
-    if (!data.user) {
-      throw new Error('No se pudo crear el usuario. Por favor, intenta de nuevo más tarde.');
-    }
-    
-    // Verificar si es necesario confirmar el email (no hay sesión activa)
-    if (!data.session) {
-      // Este no es un error real, sino parte del flujo normal cuando se requiere confirmación de email
-      return {
-        user: data.user,
-        session: null,
-        emailConfirmationRequired: true
-      };
-    }
-    
-    return {
-      user: data.user,
-      session: data.session,
-    };
-  } catch (error) {
-    // Usar el helper para formatear el error de manera amigable
-    return { error: handleSupabaseError(error) };
-  }
+  return serverRegisterUser({ email, password });
 };
 
 /**
  * Servicio para iniciar sesión
+ * Usa la acción del servidor para manejar las cookies correctamente
  */
 export const loginUser = async ({ email, password }: LoginCredentials) => {
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    return {
-      user: data.user,
-      session: data.session,
-    };
-  } catch (error) {
-    return { error: handleSupabaseError(error) };
-  }
+  return serverLoginUser({ email, password });
 };
 
 /**
  * Servicio para cerrar sesión
+ * Usa la acción del servidor para manejar las cookies correctamente
  */
 export const logoutUser = async () => {
-  try {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      throw error;
-    }
-
-    return { success: true };
-  } catch (error) {
-    return { error: handleSupabaseError(error) };
-  }
+  return serverLogoutUser();
 };
 
 /**

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getServerSession } from '../actions';
+import { getServerSession } from '@/lib/supabase/server';
 import { AuthForm, SupabaseDiagnostic } from '@/features/auth/components';
 
 export default async function AuthPage() {
@@ -12,13 +12,13 @@ export default async function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-zinc-950 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-900/10 via-zinc-950 to-zinc-950">
+      <div className="w-full max-w-md space-y-8 glassmorphism p-8 rounded-xl border border-zinc-800/50">
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-50">
             App de Hábitos
           </h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-zinc-400">
             Inicia sesión o regístrate para comenzar a hacer seguimiento de tus hábitos
           </p>
         </div>

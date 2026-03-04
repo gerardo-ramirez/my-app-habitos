@@ -17,7 +17,7 @@ export const EmailConfirmationStatus = ({ email, onBackToLogin }: EmailConfirmat
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto bg-zinc-900/50 border-zinc-800/50 backdrop-blur-xl shadow-lg">
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">

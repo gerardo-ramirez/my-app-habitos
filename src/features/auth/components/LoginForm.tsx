@@ -35,9 +35,9 @@ export const LoginForm = ({ onToggleForm }: LoginFormProps) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto bg-zinc-900/50 border-zinc-800/50 backdrop-blur-xl shadow-lg">
       <CardHeader>
-        <CardTitle className="text-center">Iniciar Sesión</CardTitle>
+        <CardTitle className="text-center text-zinc-50">Iniciar Sesión</CardTitle>
       </CardHeader>
       <CardContent>
         {formError && (
@@ -48,7 +48,7 @@ export const LoginForm = ({ onToggleForm }: LoginFormProps) => {
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
+            <label htmlFor="email" className="text-sm font-medium text-zinc-400">
               Email
             </label>
             <Input
@@ -59,11 +59,11 @@ export const LoginForm = ({ onToggleForm }: LoginFormProps) => {
               placeholder="tu@email.com"
               required
               autoComplete="email"
-              className={formError ? "border-red-500 focus-visible:ring-red-500" : ""}
+              className={formError ? "border-red-500 focus-visible:ring-red-500" : "bg-zinc-900/50 border-zinc-800 focus:border-indigo-500/50 focus:ring-indigo-500/20"}
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
+            <label htmlFor="password" className="text-sm font-medium text-zinc-400">
               Contraseña
             </label>
             <Input
@@ -74,12 +74,12 @@ export const LoginForm = ({ onToggleForm }: LoginFormProps) => {
               placeholder="••••••••"
               required
               autoComplete="current-password"
-              className={formError ? "border-red-500 focus-visible:ring-red-500" : ""}
+              className={formError ? "border-red-500 focus-visible:ring-red-500" : "bg-zinc-900/50 border-zinc-800 focus:border-indigo-500/50 focus:ring-indigo-500/20"}
             />
           </div>
           <Button
             type="submit"
-            className="w-full"
+            className="w-full bg-indigo-500 text-zinc-950 hover:bg-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-500"
             disabled={login.isPending}
           >
             {login.isPending ? 'Iniciando sesión...' : 'Iniciar Sesión'}

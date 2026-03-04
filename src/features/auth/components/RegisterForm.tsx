@@ -139,7 +139,7 @@ export const RegisterForm = ({ onToggleForm, onRegisterSuccess }: RegisterFormPr
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto bg-zinc-900/50 border-zinc-800/50 backdrop-blur-xl shadow-lg">
       <CardHeader>
         <CardTitle className="text-center">Crear Cuenta</CardTitle>
       </CardHeader>

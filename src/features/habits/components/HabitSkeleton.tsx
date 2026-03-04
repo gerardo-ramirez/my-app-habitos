@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const HabitSkeleton = () => {
   return (
-    <div className="p-4 rounded-lg shadow-md mb-4 border border-emerald-500/30 bg-zinc-900/50 glassmorphism">
+    <div className="p-4 rounded-lg shadow-md mb-4 border border-indigo-500/30 bg-zinc-900/50 glassmorphism">
       <div className="flex items-center">
         <Skeleton className="w-6 h-6 rounded-full bg-zinc-800" />
         <div className="ml-3 flex-grow">

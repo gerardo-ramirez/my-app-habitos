@@ -20,7 +20,8 @@ export const getHabits = async (filters?: HabitFilters): Promise<Habit[]> => {
     query = query.eq('user_id', userId);
 
     if (filters?.isCompleted !== undefined) {
-      query = query.eq('is_completed', filters.isCompleted);
+      const status = filters.isCompleted ? 'completed' : 'pending';
+      query = query.eq('status', status);
     }
 
     const { data, error } = await query.order('created_at', { ascending: false });
@@ -174,10 +175,10 @@ export const deleteHabit = async (id: string): Promise<boolean> => {
 
 export const toggleHabitCompletion = async (habit: Habit): Promise<Habit | null> => {
   try {
-    const isCompleted = !habit.is_completed;
+    const newStatus = habit.status === 'completed' ? 'pending' : 'completed';
     const updates: HabitUpdate = {
-      is_completed: isCompleted,
-      last_completed_at: isCompleted ? new Date().toISOString() : null,
+      status: newStatus,
+      last_completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
     };
 
     return await updateHabit(habit.id, updates);
